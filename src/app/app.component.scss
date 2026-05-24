@@ -1,0 +1,143 @@
+.premium-splash {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: #ffffff; z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  perspective: 1000px; /* For 3D exit */
+  
+  &.exit-anim {
+    animation: splashCinematicExit 1s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+  }
+}
+
+.bg-glow {
+  position: absolute;
+  width: 150vw; height: 150vw;
+  background: radial-gradient(circle, rgba(13, 93, 215, 0.04) 0%, rgba(255,255,255,0) 60%);
+  animation: glowPulse 4s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+.splash-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+.css-tk-logo {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative;
+  
+  .letters {
+    display: flex; align-items: flex-end; overflow: hidden;
+    padding-bottom: 5px; /* prevents clipping */
+    
+    .t-letter { 
+      font-size: 130px; font-weight: 900; line-height: 0.75; color: #111; 
+      margin-right: -4px; font-family: 'Inter', sans-serif; letter-spacing: -6px; 
+      display: inline-block;
+      animation: slideInT 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      opacity: 0; transform: translateX(-50px);
+    }
+    .k-letter { 
+      font-size: 130px; font-weight: 900; line-height: 0.75; color: #111; 
+      font-family: 'Inter', sans-serif; 
+      display: inline-block;
+      animation: slideInK 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      opacity: 0; transform: translateX(50px);
+    }
+  }
+  
+  .text-wrapper {
+    overflow: hidden;
+    margin-top: 15px;
+  }
+  
+  .text-reveal {
+    display: inline-block;
+    font-size: 18px; font-weight: 900; color: #111; 
+    font-family: 'Inter', sans-serif;
+    animation: trackingIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s forwards;
+    opacity: 0;
+    letter-spacing: 20px;
+    white-space: nowrap;
+    position: relative;
+    
+    &::after {
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+      animation: lightSweep 2s infinite 2s;
+    }
+  }
+}
+
+.premium-loader {
+  margin-top: 50px;
+  width: 140px; height: 2px;
+  background: rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeIn 0.5s ease 1.5s forwards;
+  
+  .progress {
+    position: absolute;
+    top: 0; bottom: 0; left: 50%; width: 0;
+    background: #111;
+    transform: translateX(-50%);
+    animation: fillCenter 1.5s cubic-bezier(0.75, 0, 0.25, 1) 1.5s forwards;
+  }
+}
+
+/* Animations */
+@keyframes glowPulse {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes slideInT {
+  0% { opacity: 0; transform: translateX(-80px) rotate(-10deg); filter: blur(10px); }
+  100% { opacity: 1; transform: translateX(0) rotate(0); filter: blur(0); }
+}
+
+@keyframes slideInK {
+  0% { opacity: 0; transform: translateX(80px) rotate(10deg); filter: blur(10px); }
+  100% { opacity: 1; transform: translateX(0) rotate(0); filter: blur(0); }
+}
+
+@keyframes trackingIn {
+  0% { opacity: 0; letter-spacing: 25px; transform: translateY(20px); filter: blur(5px); }
+  100% { opacity: 1; letter-spacing: 3px; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes lightSweep {
+  0% { left: -100%; }
+  50%, 100% { left: 200%; }
+}
+
+@keyframes fillCenter {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes splashCinematicExit {
+  0% { 
+    opacity: 1; 
+    transform: scale(1) translateZ(0) rotateX(0); 
+    filter: blur(0); 
+  }
+  30% { 
+    opacity: 1; 
+    transform: scale(0.9) translateZ(-50px) rotateX(5deg); 
+    filter: blur(0); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(2.5) translateZ(200px) rotateX(-10deg); 
+    filter: blur(20px); 
+    visibility: hidden; 
+  }
+}

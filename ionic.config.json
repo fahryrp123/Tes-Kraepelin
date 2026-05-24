@@ -1,0 +1,7 @@
+{
+  "name": "Tes Kraeplin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

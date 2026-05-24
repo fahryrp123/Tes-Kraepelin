@@ -1,0 +1,29 @@
+<ion-app>
+  <!-- Premium Splash Screen Overlay -->
+  <div class="premium-splash" *ngIf="showSplash" [class.exit-anim]="fadeOutSplash">
+    <!-- Efek cahaya radial di background -->
+    <div class="bg-glow"></div>
+    
+    <div class="splash-content">
+      <div class="logo-reveal">
+        <!-- Menggunakan murni CSS yang meniru gambar persis agar huruf bisa dianimasikan terpisah -->
+        <div class="css-tk-logo">
+          <div class="letters">
+            <span class="t-letter">T</span>
+            <span class="k-letter">K</span>
+          </div>
+          <div class="text-wrapper">
+            <span class="text-reveal">TES KRAEPELIN</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Progress Bar Super Minimalis & Elegan -->
+      <div class="premium-loader">
+        <div class="progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <ion-router-outlet></ion-router-outlet>
+</ion-app>
