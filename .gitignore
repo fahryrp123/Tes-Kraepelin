@@ -5,7 +5,7 @@ www/
 .sourcemaps/
 
 # Capacitor
-/android
+
 /ios
 
 # IDEs and editors

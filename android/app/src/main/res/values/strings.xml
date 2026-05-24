@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tes Kraeplin</string>
+    <string name="title_activity_main">Tes Kraeplin</string>
+    <string name="package_name">com.kraepelin.app</string>
+    <string name="custom_url_scheme">com.kraepelin.app</string>
+</resources>
