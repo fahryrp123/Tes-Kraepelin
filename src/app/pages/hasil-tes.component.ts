@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AdMobService } from '../admob.service';
 
 @Component({
   selector: 'app-hasil-tes',
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
           <label class="subtitle">HASIL TES KRAEPELIN</label>
           <h1>Skor Akhir</h1>
           <div class="score-display">
-            <span class="score-value text-blue">{{ result?.score }}</span>
+            <span class="score-value text-green">{{ result?.score }}</span>
           </div>
         </div>
 
@@ -47,7 +48,7 @@ import { Router } from '@angular/router';
         <div class="stats-grid mt-16">
           <div class="stat-card">
             <span class="label">TOTAL BENAR</span>
-            <span class="value text-green">{{ result?.correct }}</span>
+            <span class="value text-green-light">{{ result?.correct }}</span>
           </div>
           <div class="stat-card">
             <span class="label">TOTAL SALAH</span>
@@ -83,7 +84,7 @@ import { Router } from '@angular/router';
       </div>
     </ion-content>
 
-    <ion-footer class="ion-no-border" style="background: #f7f9fa;">
+    <ion-footer class="ion-no-border" style="background: transparent;">
       <div class="action-buttons" style="padding: 16px 20px 24px;">
         <button class="btn-primary" (click)="keluar()">KEMBALI</button>
       </div>
@@ -97,16 +98,16 @@ import { Router } from '@angular/router';
     
     .header-section {
       text-align: center; margin-top: 10px;
-      .subtitle { font-size: 10px; font-weight: 800; color: #0d5dd7; letter-spacing: 1px; }
+      .subtitle { font-size: 10px; font-weight: 800; color: #005c4b; letter-spacing: 1px; }
       h1 { font-size: 20px; font-weight: 700; color: #111; margin: 4px 0 16px; }
     }
     .score-display {
       background: white; border-radius: 24px; padding: 20px; display: inline-block;
-      min-width: 160px; box-shadow: 0 8px 24px rgba(13, 93, 215, 0.08); border: 1px solid #eef4ff;
+      min-width: 160px; box-shadow: 0 8px 24px rgba(0, 92, 75, 0.08); border: 1px solid #e5f5f2;
     }
     .score-value { font-size: 56px; font-weight: 800; line-height: 1; }
-    .text-blue { color: #0d5dd7; }
-    .text-green { color: #10b981; }
+    .text-green { color: #005c4b; }
+    .text-green-light { color: #10b981; }
     .text-red { color: #ef4444; }
 
     .bento-card {
@@ -165,15 +166,15 @@ import { Router } from '@angular/router';
       .d-info { display: flex; flex-direction: column; gap: 4px; }
       .d-title { font-size: 14px; font-weight: 800; color: #111; }
       .d-desc { font-size: 11px; color: #888; font-weight: 600; }
-      .d-val { font-size: 14px; font-weight: 800; color: #0d5dd7; background: #eaf2ff; padding: 6px 12px; border-radius: 8px; }
+      .d-val { font-size: 14px; font-weight: 800; color: #005c4b; background: #e5f5f2; padding: 6px 12px; border-radius: 8px; }
     }
 
     /* Buttons */
     .action-buttons { display: flex; gap: 12px; }
     .btn-primary {
-      flex: 1; background: #0d5dd7; border: none;
+      flex: 1; background: #005c4b; border: none;
       border-radius: 16px; padding: 16px 0; font-size: 14px; font-weight: 800;
-      color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(13, 93, 215, 0.2);
+      color: #fff; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 92, 75, 0.2);
     }
   `]
 })
@@ -183,7 +184,18 @@ export class HasilTesComponent implements OnInit {
   maxVal = 35;
   isHistory = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private admobService: AdMobService
+  ) { }
+
+  ionViewWillEnter() {
+    this.admobService.hideBanner();
+  }
+
+  ionViewWillLeave() {
+    this.admobService.resumeBanner();
+  }
 
   ngOnInit() {
     const nav = this.router.getCurrentNavigation();

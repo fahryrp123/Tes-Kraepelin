@@ -3,7 +3,9 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { closeOutline, documentTextOutline } from 'ionicons/icons';
+import { closeOutline, documentTextOutline, flask } from 'ionicons/icons';
+import { AdMobService } from '../admob.service';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 interface NavState { mode?: string; duration?: number; }
 interface AppSettings {
@@ -26,8 +28,8 @@ interface AppSettings {
       <ion-toolbar>
         <div class="header-content">
           <div class="logo-container">
-            <ion-icon name="document-text-outline" class="brand-icon"></ion-icon>
-            <span class="brand-text">KRAEPELIN</span>
+            <ion-icon name="flask" class="brand-icon"></ion-icon>
+            <span class="brand-text">KRAEPELIN LAB</span>
           </div>
 
           <ion-icon name="close-outline" class="close-icon" (click)="confirmEnd()"></ion-icon>
@@ -53,7 +55,7 @@ interface AppSettings {
           <div class="stat-box score-box" [class.full-width]="!appSettings.showTimer">
             <div class="score-item" *ngIf="appSettings.showCorrect">
               <span class="label">BENAR</span>
-              <div class="value text-blue">{{ correct }}</div>
+              <div class="value text-green">{{ correct }}</div>
             </div>
             <div class="score-divider" *ngIf="appSettings.showCorrect && appSettings.showWrong"></div>
             <div class="score-item" *ngIf="appSettings.showWrong">
@@ -61,7 +63,7 @@ interface AppSettings {
               <div class="value text-red">{{ wrong }}</div>
             </div>
             <div class="score-item" *ngIf="!appSettings.showCorrect && !appSettings.showWrong">
-              <span class="label">SOAL</span>
+              <span class="label">SOAL DIJAWAB</span>
               <div class="value">{{ correct + wrong }}</div>
             </div>
           </div>
@@ -143,8 +145,8 @@ interface AppSettings {
     }
     .logo-container {
       display: flex; align-items: center; gap: 6px;
-      .brand-icon { color: #0d5dd7; font-size: 20px; }
-      .brand-text { font-weight: 800; font-size: 16px; color: #0d5dd7; letter-spacing: 0.5px; }
+      .brand-icon { color: #005c4b; font-size: 20px; }
+      .brand-text { font-weight: 800; font-size: 16px; color: #005c4b; letter-spacing: 0.5px; }
     }
 
     .close-icon { font-size: 28px; color: #555; cursor: pointer; }
@@ -161,12 +163,12 @@ interface AppSettings {
       flex: 1.4;
       .label { font-size: 9px; font-weight: 800; color: #888; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
       .value-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px;
-        .time { font-size: 20px; font-weight: 800; color: #0d5dd7; line-height: 1; }
+        .time { font-size: 20px; font-weight: 800; color: #005c4b; line-height: 1; }
         .unit { font-size: 9px; color: #888; font-weight: 700; }
       }
       .progress-bar-bg {
         height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #0d5dd7, #4f9cf9); transition: width 1s linear; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #005c4b, #10b981); transition: width 1s linear; }
       }
     }
     .score-box {
@@ -179,7 +181,7 @@ interface AppSettings {
       .value { font-size: 18px; font-weight: 800; }
     }
     .score-divider { width: 1px; height: 28px; background: #eee; }
-    .text-blue { color: #0d5dd7; }
+    .text-green { color: #005c4b; }
     .text-red { color: #d93838; }
 
     /* Gameplay */
@@ -194,12 +196,12 @@ interface AppSettings {
       display: flex; gap: 12px; margin-bottom: 12px;
     }
     .next-box {
-      background: #eaf2ff; padding: 8px 16px; border-radius: 12px;
+      background: #e5f5f2; padding: 8px 16px; border-radius: 12px;
       display: flex; flex-direction: column; align-items: center;
-      border: 1px solid #dce8fc; box-shadow: 0 4px 12px rgba(13, 93, 215, 0.08);
+      border: 1px solid #c6ebd9; box-shadow: 0 4px 12px rgba(0, 92, 75, 0.08);
       min-width: 90px;
     }
-    .next-label { font-size: 8px; font-weight: 800; color: #0d5dd7; letter-spacing: 0.5px; }
+    .next-label { font-size: 8px; font-weight: 800; color: #005c4b; letter-spacing: 0.5px; }
     .next-val { font-size: 22px; font-weight: 800; color: #111; margin-top: 2px; line-height: 1; }
 
     /* Vertical card */
@@ -208,22 +210,22 @@ interface AppSettings {
       display: flex; flex-direction: column; align-items: center;
       margin: 4px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.06);
       min-width: 170px; transition: box-shadow 0.15s ease;
-      &.correct-flash { box-shadow: 0 0 0 3px #22c55e; }
+      &.correct-flash { box-shadow: 0 0 0 3px #10b981; }
       &.wrong-flash { box-shadow: 0 0 0 3px #ef4444; }
     }
     .op-badge {
-      background: #eaf2ff; color: #0d5dd7; font-size: 9px; font-weight: 800;
+      background: #e5f5f2; color: #005c4b; font-size: 9px; font-weight: 800;
       padding: 4px 12px; border-radius: 6px; margin-bottom: 6px;
-      border: 1px solid #dce8fc; letter-spacing: 0.5px;
+      border: 1px solid #c6ebd9; letter-spacing: 0.5px;
     }
     .num-op1 { font-size: 46px; font-weight: 800; color: #334155; line-height: 1; }
     .num-op2 { font-size: 56px; font-weight: 800; color: #111; line-height: 1.15; }
 
     .input-zone {
       margin-top: 6px; display: flex; flex-direction: column; align-items: center; min-width: 56px;
-      .question-mark { font-size: 38px; font-weight: 700; color: #8ab4f8; }
-      .entered-val { font-size: 38px; font-weight: 700; color: #0d5dd7; }
-      .underline { width: 80%; height: 2.5px; background: #0d5dd7; margin-top: 2px; border-radius: 2px; }
+      .question-mark { font-size: 38px; font-weight: 700; color: #a7f3d0; }
+      .entered-val { font-size: 38px; font-weight: 700; color: #005c4b; }
+      .underline { width: 80%; height: 2.5px; background: #005c4b; margin-top: 2px; border-radius: 2px; }
     }
 
     /* Horizontal card */
@@ -234,14 +236,14 @@ interface AppSettings {
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .h-num1 { font-size: 38px; font-weight: 800; color: #334155; line-height: 1; }
-    .h-op   { font-size: 32px; font-weight: 700; color: #0d5dd7; line-height: 1; }
+    .h-op   { font-size: 32px; font-weight: 700; color: #005c4b; line-height: 1; }
     .h-num2 { font-size: 46px; font-weight: 800; color: #111; line-height: 1; }
     .h-eq   { font-size: 32px; font-weight: 700; color: #888; line-height: 1; }
     .input-zone-h {
       display: flex; flex-direction: column; align-items: center; min-width: 44px;
-      .question-mark { font-size: 38px; font-weight: 700; color: #8ab4f8; }
-      .entered-val { font-size: 38px; font-weight: 700; color: #0d5dd7; }
-      .underline { width: 100%; height: 2.5px; background: #0d5dd7; margin-top: 2px; border-radius: 2px; }
+      .question-mark { font-size: 38px; font-weight: 700; color: #a7f3d0; }
+      .entered-val { font-size: 38px; font-weight: 700; color: #005c4b; }
+      .underline { width: 100%; height: 2.5px; background: #005c4b; margin-top: 2px; border-radius: 2px; }
     }
 
     /* Keyboard */
@@ -261,7 +263,7 @@ interface AppSettings {
       background: white; border: 1.5px solid #f0f0f4; height: 50px; border-radius: 12px;
       font-size: 22px; font-weight: 600; color: #111;
       box-shadow: 0 2px 6px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.1s;
-      &:active { background: #f0f4ff; transform: scale(0.95); border-color: #0d5dd7; }
+      &:active { background: #e5f5f2; transform: scale(0.95); border-color: #005c4b; }
     }
     .zero-btn { grid-column: 1 / -1; }
   `]
@@ -301,8 +303,8 @@ export class TestSessionComponent implements OnInit, OnDestroy {
     add: '+', subtract: '−', multiply: '×', divide: '÷'
   };
 
-  constructor(private router: Router) {
-    addIcons({ closeOutline, documentTextOutline });
+  constructor(private router: Router, private admobService: AdMobService) {
+    addIcons({ closeOutline, documentTextOutline, flask });
   }
 
   get opLabel() { return this.opLabels[this.mode] || 'PENJUMLAHAN'; }
@@ -328,6 +330,7 @@ export class TestSessionComponent implements OnInit, OnDestroy {
   private hasInitialized = false;
 
   ionViewWillEnter() {
+    this.admobService.hideBanner();
     if (this.hasInitialized) {
       this.initTest();
     }
@@ -371,6 +374,9 @@ export class TestSessionComponent implements OnInit, OnDestroy {
       }
     } catch {}
 
+    // Siapkan iklan interstisial agar siap ditampilkan saat tes selesai
+    this.admobService.prepareInterstitial();
+
     this.generateChain(60);
     this.timer = setInterval(() => {
       if (this.timeLeft > 0) this.timeLeft--;
@@ -404,6 +410,11 @@ export class TestSessionComponent implements OnInit, OnDestroy {
     this.isSubmitting = true;
     this.userInput = num.toString();
     
+    // Berikan getaran kecil jika setting aktif
+    if (this.appSettings.vibrateFeedback) {
+      Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+    }
+
     // Memberikan delay sebentar agar angka muncul dulu sebelum ganti soal
     setTimeout(() => {
       this.submitAnswer();
@@ -461,6 +472,9 @@ export class TestSessionComponent implements OnInit, OnDestroy {
     const existing = JSON.parse(localStorage.getItem('kraepelin_tests') || '[]');
     existing.unshift(result);
     localStorage.setItem('kraepelin_tests', JSON.stringify(existing));
+
+    // Tampilkan iklan interstisial saat tes selesai
+    this.admobService.showInterstitial();
 
     this.router.navigate(['/hasil-tes'], { state: { result } });
   }

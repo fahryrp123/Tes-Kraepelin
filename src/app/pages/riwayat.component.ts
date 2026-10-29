@@ -1,365 +1,322 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { addOutline, closeOutline, documentTextOutline, star, trendingUp, removeOutline, calendarOutline, chevronForward } from 'ionicons/icons';
-
-interface TestResult {
-  id: string;
-  mode: string;
-  correct: number;
-  wrong: number;
-  duration: number;
-  score: number;
-  timestamp: string;
-  chunks?: { correct: number; wrong: number }[];
-}
-
+import {
+  flask, analyticsOutline, calendarOutline, informationCircleOutline, documentTextOutline, checkmark, checkmarkDoneOutline, warningOutline, trophyOutline, flashOutline, speedometerOutline, trendingDownOutline, searchOutline, bulbOutline, timeOutline, add, layersOutline, downloadOutline, playOutline
+} from 'ionicons/icons';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-riwayat',
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [IonicModule, CommonModule],
   template: `
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>
-          <div class="logo-container">
-            <ion-icon name="document-text-outline" class="brand-icon"></ion-icon>
-            <span class="brand-text">Kraepelin</span>
-          </div>
-        </ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content>
-      <div class="content-wrapper">
-        <div class="header-section">
-          <label class="subtitle">ARSIP TES</label>
-          <h1>Riwayat Tes</h1>
-          <p>Semua hasil tes kamu tersimpan di sini.</p>
-        </div>
+      <div class="page-background">
 
-        <!-- Filter chips (Waktu) -->
-        <div class="filters-row mt-16">
-          <button class="filter-btn" [class.active]="filter === 'semua'" (click)="setFilter('semua')">Semua Waktu</button>
-          <button class="filter-btn" [class.active]="filter === 'harian'" (click)="setFilter('harian')">Hari Ini</button>
-          <button class="filter-btn" [class.active]="filter === 'kemarin'" (click)="setFilter('kemarin')">Kemarin</button>
-          <label class="filter-btn calendar-btn" [class.active]="filter === 'custom'" style="position: relative; overflow: hidden; display: flex; align-items: center; gap: 4px;">
-            <ion-icon name="calendar-outline"></ion-icon>
-            <span>{{ filter === 'custom' && customDate ? formatShortDate(customDate) : 'Pilih Tanggal' }}</span>
-            <input type="date" [ngModel]="customDate" (ngModelChange)="onNativeDateChange($event)" style="opacity: 0; position: absolute; left: 0; top: 0; width: 100%; height: 100%; cursor: pointer;" />
-          </label>
-        </div>
-
-        <!-- Filter Mode -->
-        <div class="mode-tabs mt-16">
-          <button class="mode-tab" [class.active]="modeFilter === 'all'" (click)="modeFilter = 'all'">Semua Mode</button>
-          <button class="mode-tab" [class.active]="modeFilter === 'add'" (click)="modeFilter = 'add'">Penjumlahan</button>
-          <button class="mode-tab" [class.active]="modeFilter === 'subtract'" (click)="modeFilter = 'subtract'">Pengurangan</button>
-          <button class="mode-tab" [class.active]="modeFilter === 'multiply'" (click)="modeFilter = 'multiply'">Perkalian</button>
-          <button class="mode-tab" [class.active]="modeFilter === 'divide'" (click)="modeFilter = 'divide'">Pembagian</button>
-        </div>
-
-        <!-- Empty state -->
-        <div class="empty-state mt-20" *ngIf="filteredTests.length === 0">
-          <div class="empty-icon">📋</div>
-          <h3>Belum ada riwayat</h3>
-          <p>Hasil tes akan muncul di sini setelah kamu menyelesaikan tes.</p>
-        </div>
-
-        <!-- List riwayat -->
-        <div class="history-list mt-20" *ngIf="filteredTests.length > 0">
-          <div class="history-card clickable" *ngFor="let test of filteredTests" (click)="goToDetail(test)">
-            <!-- Header -->
-            <div class="card-header-row">
-              <div class="header-left">
-                <div class="icon-box" [class]="test.mode">
-                  <span class="mode-sym">{{ getModeSymbol(test.mode) }}</span>
-                </div>
-                <div class="test-info">
-                  <h3>{{ getModeLabel(test.mode) }}</h3>
-                  <p>{{ formatFullDate(test.timestamp) }}</p>
-                </div>
-              </div>
-              <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
-            </div>
-
-            <!-- Stats -->
-            <div class="card-stats-row">
-              <div class="stat-col score-col">
-                <span class="label">SKOR</span>
-                <span class="value text-blue">{{ test.score }}</span>
-              </div>
-              <div class="stat-divider"></div>
-              <div class="stat-col">
-                <span class="label">BENAR</span>
-                <span class="value text-green">{{ test.correct }}</span>
-              </div>
-              <div class="stat-col">
-                <span class="label">SALAH</span>
-                <span class="value text-red">{{ test.wrong }}</span>
-              </div>
-              <div class="stat-col">
-                <span class="label">WAKTU</span>
-                <span class="value">{{ formatDuration(test.duration) }}</span>
-              </div>
+        <div class="top-header">
+          <div class="header-left">
+            <div class="logo-box"><ion-icon name="flask"></ion-icon></div>
+            <div class="header-titles">
+              <span class="lab-title">KRAEPELIN LAB</span>
+              <h1 class="page-title">Analisis</h1>
             </div>
           </div>
         </div>
 
+        <div class="analysis-banner">
+          <div class="banner-badge"><ion-icon name="analytics-outline"></ion-icon> REKAM JEJAK</div>
+          <div class="banner-title-row">
+            <h2>Riwayat Latihan</h2>
+          </div>
+          <p>Lihat perkembangan skor, akurasi, dan kecepatan Anda setiap saat.</p>
+        </div>
 
+        <div class="filters-section">
+          <div class="filter-header">
+            <span class="f-label">FILTER WAKTU</span>
+            <span class="f-count">{{ filteredHistory.length }} Sesi Tercatat</span>
+          </div>
+          <div class="chips-row">
+            <div class="chip" [class.active]="filterTime === 'all'" (click)="setFilterTime('all')">Semua</div>
+            <div class="chip" [class.active]="filterTime === 'today'" (click)="setFilterTime('today')">Hari Ini</div>
+            <div class="chip" [class.active]="filterTime === 'week'" (click)="setFilterTime('week')">Minggu Ini</div>
+          </div>
+          <div class="filter-row-inline mt-3">
+            <span class="f-inline-label">Mode:</span>
+            <div class="chip" [class.active]="filterMode === 'all'" (click)="setFilterMode('all')">Semua</div>
+            <div class="chip" [class.active]="filterMode === 'add'" (click)="setFilterMode('add')">Penjumlahan</div>
+            <div class="chip" [class.active]="filterMode === 'subtract'" (click)="setFilterMode('subtract')">Pengurangan</div>
+            <div class="chip" [class.active]="filterMode === 'multiply'" (click)="setFilterMode('multiply')">Perkalian</div>
+            <div class="chip" [class.active]="filterMode === 'divide'" (click)="setFilterMode('divide')">Pembagian</div>
+          </div>
+        </div>
 
-        <!-- Ringkasan -->
-        <div class="summary-card mt-20" *ngIf="allTests.length > 0">
-          <h3>Ringkasan Keseluruhan</h3>
-          <div class="summary-grid">
-            <div class="summary-item">
-              <span class="label">TOTAL TES</span>
-              <div class="value">{{ allTests.length }}</div>
+        <div class="section-container">
+          <div class="section-title-row">
+            <h3>Ringkasan Metrik</h3>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="m-head">TOTAL TES <ion-icon name="document-text-outline"></ion-icon></div>
+              <div class="m-val">{{ totalTests }} <span>Sesi</span></div>
             </div>
-            <div class="summary-item">
-              <span class="label">TOTAL BENAR</span>
-              <div class="value text-blue">{{ totalCorrect }}</div>
+            <div class="metric-card">
+              <div class="m-head">TOTAL BENAR <ion-icon name="checkmark-done-outline"></ion-icon></div>
+              <div class="m-val">{{ totalCorrect }} <span>Butir</span></div>
             </div>
-            <div class="summary-item">
-              <span class="label">SKOR TERTINGGI</span>
-              <div class="value text-blue">{{ highestScore }}</div>
+            <div class="metric-card">
+              <div class="m-head">SKOR TERTINGGI <ion-icon name="trophy-outline"></ion-icon></div>
+              <div class="m-val">{{ highestScore }} <span>Poin</span></div>
             </div>
-            <div class="summary-item">
-              <span class="label">RATA-RATA SKOR</span>
-              <div class="value">{{ avgScore }}</div>
+            <div class="metric-card">
+              <div class="m-head">KECEPATAN <ion-icon name="speedometer-outline"></ion-icon></div>
+              <div class="m-val">{{ avgSpeed }} <span>/ detik</span></div>
             </div>
           </div>
+        </div>
+
+        <div class="section-container chart-section" *ngIf="filteredHistory.length > 0">
+          <div class="chart-header-row">
+            <div class="chart-titles">
+              <span class="c-subtitle">TREN SKOR ANDA</span>
+              <h3>Grafik Performa Latihan</h3>
+            </div>
+          </div>
+          <div class="fake-chart-area">
+            <div class="chart-graph">
+               <svg width="100%" height="100%" viewBox="0 0 300 100" preserveAspectRatio="none">
+                  <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:rgba(0,92,75,0.2);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgba(255,255,255,0);stop-opacity:1" />
+                  </linearGradient>
+                  <!-- Ini hanya visualisasi sederhana -->
+                  <path d="M 0 50 Q 50 10, 100 60 T 200 40 T 300 30 L 300 100 L 0 100 Z" fill="url(#grad1)"/>
+                  <path d="M 0 50 Q 50 10, 100 60 T 200 40 T 300 30" stroke="#005c4b" stroke-width="3" fill="none"/>
+               </svg>
+            </div>
+          </div>
+
+          <div class="chart-insight-box">
+            <h4><ion-icon name="search-outline"></ion-icon> Analisis Singkat</h4>
+            <p>Terus pertahankan konsistensi Anda. Jangan terlalu terburu-buru di awal agar tidak mudah lelah. Kunci utamanya adalah ritme pengerjaan yang stabil.</p>
+          </div>
+        </div>
+
+        <div class="section-container log-section">
+          <div class="section-title-row">
+            <h3>Riwayat Tersimpan</h3>
+          </div>
+          
+          <div *ngIf="filteredHistory.length === 0" class="empty-state">
+             Belum ada data latihan. Yuk, mulai tes pertama Anda!
+          </div>
+
+          <div class="log-card" *ngFor="let item of filteredHistory" (click)="openResult(item)">
+            <div class="log-header">
+              <div class="log-icon-box" [ngClass]="item.mode"><ion-icon [name]="getModeIcon(item.mode)"></ion-icon></div>
+              <div class="log-titles">
+                <h4>{{ getModeName(item.mode) }}</h4>
+                <span class="log-date">{{ formatDate(item.timestamp) }}</span>
+              </div>
+              <div class="log-score">
+                <span class="score-label">SKOR</span>
+                <span class="score-val">{{ item.score }}</span>
+              </div>
+            </div>
+            <div class="log-stats">
+              <div class="ls-box blue"><span>Benar</span><strong>{{ item.correct }}</strong></div>
+              <div class="ls-box red"><span>Salah</span><strong>{{ item.wrong }}</strong></div>
+              <div class="ls-box grey"><span>Waktu</span><strong>{{ item.duration }}s</strong></div>
+            </div>
+          </div>
+
         </div>
 
       </div>
     </ion-content>
   `,
   styles: [`
-    ion-content { --background: #f7f9fa; }
-    ion-toolbar { --background: #f7f9fa; }
-    .logo-container {
-      display: flex; align-items: center; gap: 8px;
-      .brand-icon { color: #0d5dd7; font-size: 22px; }
-      .brand-text { font-weight: 700; font-size: 18px; color: #0d5dd7; }
-    }
-    .content-wrapper { padding: 16px 20px 40px; }
-    .subtitle { font-size: 10px; font-weight: 700; color: #0d5dd7; letter-spacing: 1px; }
-    .header-section {
-      h1 { font-size: 26px; font-weight: 800; color: #111; margin: 4px 0 8px 0; }
-      p { font-size: 13px; color: #555; line-height: 1.5; margin: 0; }
-    }
+    :host { display: block; height: 100%; position: relative; }
+    ion-content { --background: #fafbfc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .page-background { padding: 20px; padding-bottom: 20px; padding-top: max(40px, env(safe-area-inset-top)); }
 
-    .filters-row {
-      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-      &::-webkit-scrollbar { display: none; }
-    }
-    .filter-btn {
-      background: #e8ebee; color: #555; border: none; padding: 8px 14px;
-      border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap;
-      cursor: pointer; display: flex; align-items: center; gap: 5px; flex-shrink: 0;
-      ion-icon { font-size: 13px; }
-      &.active { background: #0d5dd7; color: white; }
-    }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo-box { width: 40px; height: 40px; background: #005c4b; border-radius: 12px; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; }
+    .header-titles { display: flex; flex-direction: column; }
+    .lab-title { font-size: 10px; font-weight: 700; color: #6b7280; letter-spacing: 1px; }
+    .page-title { font-size: 20px; font-weight: 800; color: #111; margin: 0; line-height: 1.2; }
 
-    .date-picker-row { padding: 4px 0; }
-    .date-selects {
-      display: flex; gap: 8px;
-    }
-    .date-select {
-      flex: 1; padding: 10px 8px; border: 1.5px solid #e0e0e0;
-      border-radius: 10px; font-size: 13px; font-weight: 600; color: #111;
-      background: white; appearance: none; -webkit-appearance: none;
-      text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-      &:focus { outline: none; border-color: #0d5dd7; }
-    }
+    .section-container { margin-bottom: 24px; }
+    .section-title-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+    .section-title-row h3 { font-size: 15px; font-weight: 800; color: #005c4b; margin: 0; display: flex; align-items: center; gap: 6px; }
+    
+    .empty-state { padding: 20px; text-align: center; color: #6b7280; font-size: 13px; background: white; border-radius: 12px; border: 1px dashed #cbd5e1; }
 
-    .mode-tabs {
-      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-      &::-webkit-scrollbar { display: none; }
-    }
-    .mode-tab {
-      background: white; border: 1px solid #e5e7eb; padding: 10px 16px; border-radius: 12px;
-      font-size: 12px; font-weight: 700; color: #555; white-space: nowrap; transition: 0.2s;
-      &.active { background: #0d5dd7; color: white; border-color: #0d5dd7; }
-    }
+    .mt-3 { margin-top: 12px; }
 
-    .empty-state {
-      text-align: center; padding: 48px 24px;
-      .empty-icon { font-size: 48px; margin-bottom: 16px; }
-      h3 { font-size: 16px; font-weight: 700; color: #333; margin: 0 0 8px 0; }
-      p { font-size: 13px; color: #888; margin: 0; line-height: 1.5; }
-    }
+    .analysis-banner { background: #eef8f5; border-radius: 16px; padding: 16px; margin-bottom: 24px; border: 1px solid #dff0ea; }
+    .banner-badge { display: inline-flex; align-items: center; gap: 4px; background: #c6ebd9; color: #005c4b; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 12px; }
+    .banner-title-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
+    .banner-title-row h2 { font-size: 20px; font-weight: 800; color: #111; margin: 0; }
+    .analysis-banner p { margin: 0; font-size: 12px; color: #4b5563; line-height: 1.5; }
 
-    .history-list { display: flex; flex-direction: column; gap: 16px; }
-    .history-card {
-      background: white; border-radius: 20px; padding: 20px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #f0f0f4;
-      display: flex; flex-direction: column; gap: 16px;
-      &.clickable { cursor: pointer; transition: all 0.2s; }
-      &.clickable:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-    }
+    .filters-section { margin-bottom: 24px; }
+    .filter-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+    .f-label { font-size: 11px; font-weight: 700; color: #4b5563; letter-spacing: 0.5px; }
+    .f-count { font-size: 11px; font-weight: 700; color: #005c4b; }
+    .chips-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 8px; }
+    .chips-row::-webkit-scrollbar { display: none; }
+    .chip { padding: 6px 14px; border-radius: 20px; background: #ffffff; border: 1px solid #e5e7eb; font-size: 12px; font-weight: 600; color: #4b5563; white-space: nowrap; cursor: pointer; }
+    .chip.active { background: #005c4b; color: white; border-color: #005c4b; }
+    
+    .filter-row-inline { display: flex; gap: 8px; align-items: center; overflow-x: auto; }
+    .f-inline-label { font-size: 11px; font-weight: 600; color: #6b7280; }
+    .filter-row-inline .chip { padding: 4px 12px; font-size: 11px; background: #f3f4f6; border-color: transparent; }
+    .filter-row-inline .chip.active { background: #c6ebd9; color: #005c4b; }
 
-    .card-header-row {
-      display: flex; justify-content: space-between; align-items: center;
-      .header-left { display: flex; align-items: center; gap: 12px; }
-      .icon-box {
-        width: 40px; height: 40px; border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        &.add { background: #eaf2ff; color: #0d5dd7; }
-        &.subtract { background: #e8ebee; color: #334155; }
-        &.multiply { background: #eef4ff; color: #0d5dd7; }
-        &.divide { background: #fef3c7; color: #92400e; }
-      }
-      .mode-sym { font-size: 22px; font-weight: 800; line-height: 1; }
-      .test-info {
-        h3 { font-size: 14px; font-weight: 800; color: #111; margin: 0 0 2px 0; }
-        p { font-size: 10px; font-weight: 600; color: #888; margin: 0; }
-      }
-      .arrow-icon { font-size: 20px; color: #ccc; }
-    }
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .metric-card { background: white; border-radius: 16px; padding: 12px; border: 1px solid #f3f4f6; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .m-head { font-size: 10px; font-weight: 700; color: #6b7280; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .m-head ion-icon { font-size: 14px; background: #f3f4f6; padding: 4px; border-radius: 6px; }
+    .m-val { font-size: 20px; font-weight: 800; color: #111; margin-bottom: 4px; display: flex; align-items: baseline; gap: 4px; }
+    .m-val span { font-size: 11px; font-weight: 600; color: #6b7280; }
 
-    .card-stats-row {
-      display: flex; align-items: center; justify-content: space-between;
-      background: #f8f9fa; border-radius: 12px; padding: 12px 16px;
-    }
-    .stat-col {
-      display: flex; flex-direction: column; align-items: flex-start;
-      .label { font-size: 9px; font-weight: 800; color: #888; letter-spacing: 0.5px; margin-bottom: 4px; }
-      .value { font-size: 14px; font-weight: 800; color: #333; }
-      .text-blue { color: #0d5dd7; font-size: 20px; }
-      .text-green { color: #10b981; }
-      .text-red { color: #ef4444; }
-    }
-    .score-col { min-width: 60px; }
-    .stat-divider { width: 1px; height: 28px; background: #e5e7eb; margin: 0 12px; }
+    .chart-section { background: white; border-radius: 16px; padding: 16px; border: 1px solid #f3f4f6; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .chart-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .c-subtitle { font-size: 10px; font-weight: 700; color: #005c4b; letter-spacing: 0.5px; margin-bottom: 4px; display: block; }
+    .chart-titles h3 { font-size: 16px; font-weight: 800; color: #111; margin: 0; }
+    
+    .fake-chart-area { position: relative; height: 100px; margin-bottom: 16px; }
+    .chart-graph { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
 
+    .chart-insight-box { background: #f8fafc; border-radius: 12px; padding: 16px; }
+    .chart-insight-box h4 { font-size: 12px; font-weight: 800; color: #005c4b; margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px; }
+    .chart-insight-box p { font-size: 11px; color: #4b5563; line-height: 1.5; margin: 0; }
 
+    .log-card { background: white; border-radius: 16px; padding: 16px; border: 1px solid #f3f4f6; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); cursor: pointer; transition: all 0.2s; }
+    .log-card:active { transform: scale(0.98); background: #f8fafc; }
+    .log-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .log-icon-box { width: 36px; height: 36px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: 700; background: #e0e7ff; color: #4338ca; }
+    .log-icon-box.subtract { background: #ffedd5; color: #c2410c; }
+    .log-icon-box.multiply { background: #fce7f3; color: #be185d; }
+    .log-icon-box.divide { background: #c8f5e9; color: #005c4b; }
+    
+    .log-titles { flex: 1; }
+    .log-titles h4 { font-size: 14px; font-weight: 800; color: #111; margin: 0 0 4px 0; }
+    .log-date { font-size: 11px; color: #6b7280; font-weight: 500; }
+    .log-score { text-align: right; }
+    .score-label { display: block; font-size: 9px; font-weight: 700; color: #6b7280; letter-spacing: 0.5px; }
+    .score-val { font-size: 20px; font-weight: 800; color: #111; }
+    
+    .log-stats { display: flex; gap: 6px; }
+    .ls-box { flex: 1; background: #f8fafc; border-radius: 8px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    .ls-box.blue { background: #eff6ff; }
+    .ls-box.red { background: #fef2f2; }
+    .ls-box.grey { background: #f3f4f6; }
+    .ls-box span { font-size: 10px; font-weight: 600; color: #6b7280; }
+    .ls-box strong { font-size: 14px; font-weight: 800; color: #111; }
+    .ls-box.red strong { color: #ef4444; }
+    .ls-box.blue strong { color: #3b82f6; }
 
-    .summary-card {
-      background: #f8f9fa; border-radius: 16px; padding: 20px; border: 1px solid #eee;
-      h3 { font-size: 14px; font-weight: 700; color: #111; margin: 0 0 16px 0; }
-    }
-    .summary-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px;
-      .summary-item {
-        display: flex; flex-direction: column;
-        .label { font-size: 9px; font-weight: 700; color: #888; margin-bottom: 4px; }
-        .value { font-size: 20px; font-weight: 800; color: #111; &.text-blue { color: #0d5dd7; } }
-      }
-    }
-
-    .mt-12 { margin-top: 12px; }
-    .mt-16 { margin-top: 16px; }
-    .mt-20 { margin-top: 20px; }
   `]
 })
-export class RiwayatComponent {
-  filter = 'semua';
-  modeFilter = 'all';
-  allTests: TestResult[] = [];
-  customDate = '';
+export class RiwayatComponent implements OnInit {
+  allHistory: any[] = [];
+  filteredHistory: any[] = [];
+  
+  filterTime = 'all';
+  filterMode = 'all';
+
+  totalTests = 0;
+  totalCorrect = 0;
+  highestScore = 0;
+  avgSpeed = '0.0';
 
   constructor(private router: Router) {
-    addIcons({ addOutline, closeOutline, documentTextOutline, star, trendingUp, removeOutline, calendarOutline, chevronForward });
+    addIcons({
+      flask, analyticsOutline, calendarOutline, informationCircleOutline, documentTextOutline, checkmark, checkmarkDoneOutline, warningOutline, trophyOutline, flashOutline, speedometerOutline, trendingDownOutline, searchOutline, bulbOutline, timeOutline, add, layersOutline, downloadOutline, playOutline
+    });
   }
 
+  ngOnInit() {
+    this.loadHistory();
+  }
+  
   ionViewWillEnter() {
-    this.allTests = JSON.parse(localStorage.getItem('kraepelin_tests') || '[]');
+    this.loadHistory();
   }
 
-  setFilter(f: string) {
-    this.filter = f;
-    if (f !== 'custom') {
-      this.customDate = '';
+  loadHistory() {
+    try {
+      this.allHistory = JSON.parse(localStorage.getItem('kraepelin_tests') || '[]');
+    } catch {
+      this.allHistory = [];
+    }
+    this.applyFilters();
+  }
+
+  setFilterTime(val: string) {
+    this.filterTime = val;
+    this.applyFilters();
+  }
+
+  setFilterMode(val: string) {
+    this.filterMode = val;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    let temp = [...this.allHistory];
+    
+    if (this.filterMode !== 'all') {
+      temp = temp.filter(t => t.mode === this.filterMode);
+    }
+    
+    if (this.filterTime === 'today') {
+       const today = new Date().toDateString();
+       temp = temp.filter(t => new Date(t.timestamp).toDateString() === today);
+    } else if (this.filterTime === 'week') {
+       const weekAgo = new Date();
+       weekAgo.setDate(weekAgo.getDate() - 7);
+       temp = temp.filter(t => new Date(t.timestamp) >= weekAgo);
+    }
+    
+    this.filteredHistory = temp;
+    this.calculateMetrics();
+  }
+
+  calculateMetrics() {
+    this.totalTests = this.filteredHistory.length;
+    this.totalCorrect = this.filteredHistory.reduce((acc, curr) => acc + curr.correct, 0);
+    this.highestScore = this.filteredHistory.reduce((max, curr) => curr.score > max ? curr.score : max, 0);
+    
+    let totalDuration = this.filteredHistory.reduce((acc, curr) => acc + curr.duration, 0);
+    if (totalDuration > 0) {
+      this.avgSpeed = (this.totalCorrect / totalDuration).toFixed(1);
+    } else {
+      this.avgSpeed = '0.0';
     }
   }
 
-  // Handler untuk Native Date Input
-  onNativeDateChange(val: string) {
-    if (val) {
-      this.customDate = val;
-      this.setFilter('custom');
-    }
+  getModeName(mode: string) {
+    const modes: any = { add: 'Penjumlahan', subtract: 'Pengurangan', multiply: 'Perkalian', divide: 'Pembagian' };
+    return modes[mode] || 'Latihan';
   }
 
-  get filteredTests(): TestResult[] {
-    const now = new Date();
-    let list = this.allTests;
-
-    if (this.modeFilter !== 'all') {
-      list = list.filter(t => t.mode === this.modeFilter);
-    }
-
-    switch (this.filter) {
-      case 'harian':
-        return list.filter(t => new Date(t.timestamp).toDateString() === now.toDateString());
-      case 'kemarin': {
-        const yesterday = new Date(now);
-        yesterday.setDate(now.getDate() - 1);
-        return list.filter(t => new Date(t.timestamp).toDateString() === yesterday.toDateString());
-      }
-      case 'mingguan': {
-        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        return list.filter(t => new Date(t.timestamp) >= weekAgo);
-      }
-      case 'custom': {
-        if (!this.customDate) return list;
-        return list.filter(t => {
-          const d = new Date(t.timestamp);
-          const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-          return dStr === this.customDate;
-        });
-      }
-      default: return list;
-    }
+  getModeIcon(mode: string) {
+    return 'document-text-outline';
   }
 
-  get totalCorrect() { return this.allTests.reduce((s, t) => s + t.correct, 0); }
-  get highestScore() { return this.allTests.length ? Math.max(...this.allTests.map(t => t.score)) : 0; }
-  get avgScore() {
-    if (!this.allTests.length) return 0;
-    return Math.round(this.allTests.reduce((s, t) => s + t.score, 0) / this.allTests.length);
+  formatDate(d: string) {
+    if (!d) return '';
+    const date = new Date(d);
+    return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
   }
 
-  getModeLabel(mode: string) {
-    return ({ add: 'Penjumlahan', subtract: 'Pengurangan', multiply: 'Perkalian', divide: 'Pembagian' } as any)[mode] || mode;
-  }
-  getModeSymbol(mode: string) {
-    return ({ add: '+', subtract: '−', multiply: '×', divide: '÷' } as any)[mode] || '+';
-  }
-
-  formatFullDate(ts: string): string {
-    const d = new Date(ts);
-    const dateStr = d.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const timeStr = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    return `${dateStr} ${timeStr}`;
-  }
-
-  formatShortDate(dateStr: string): string {
-    if (!dateStr) return 'Pilih Tanggal';
-    const [y, m, d] = dateStr.split('-');
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-    return `${parseInt(d)} ${months[parseInt(m) - 1]} ${y}`;
-  }
-
-  formatDuration(sec: number): string {
-    const m = Math.floor(sec / 60), s = sec % 60;
-    return m > 0 ? `${m}:${s.toString().padStart(2, '0')}` : `0:${s.toString().padStart(2, '0')}`;
-  }
-
-  goToDetail(test: TestResult) {
-    if (!test.chunks) {
-      test.chunks = Array.from({ length: 10 }, () => ({
-        correct: Math.floor(test.correct / 10),
-        wrong: Math.floor(test.wrong / 10)
-      }));
-    }
-    this.router.navigate(['/hasil-tes'], { state: { result: test, isHistory: true } });
+  openResult(item: any) {
+    this.router.navigate(['/hasil-tes'], { state: { result: item, isHistory: true } });
   }
 }

@@ -32,11 +32,6 @@
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
-/* Dark mode disabled for clinical app */
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-/* @import "@ionic/angular/css/palettes/dark.system.css"; */
-
 html, body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -44,7 +39,7 @@ html, body {
   color-scheme: light;
 }
 
-/* Force light theme always */
+/* Force light theme always by default */
 :root {
   --ion-background-color: #f7f9fa;
   --ion-text-color: #111111;
@@ -60,3 +55,116 @@ app-tabs {
   height: 100%;
   contain: layout;
 }
+
+body.ad-banner-visible ion-content {
+  --padding-bottom: 60px;
+}
+
+body.ad-banner-visible app-tabs ion-tab-bar[slot="bottom"] {
+  transform: translateY(-60px);
+}
+
+/* === DARK MODE OVERRIDES === */
+body.dark {
+  background-color: #121212 !important;
+  color: #e2e8f0 !important;
+  color-scheme: dark;
+}
+body.dark ion-content,
+body.dark .page-background,
+body.dark .test-container,
+body.dark .result-container {
+  --background: #121212 !important;
+  background-color: #121212 !important;
+  color: #e2e8f0 !important;
+}
+body.dark .page-title,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark .brand-text {
+  color: #f8fafc !important;
+}
+body.dark .top-header,
+body.dark ion-toolbar,
+body.dark ion-footer {
+  --background: #121212 !important;
+  background-color: #121212 !important;
+  border-color: #333 !important;
+}
+body.dark .mode-card,
+body.dark .history-card,
+body.dark .analysis-banner,
+body.dark .metric-card,
+body.dark .chart-section,
+body.dark .log-card,
+body.dark .setting-item,
+body.dark .layout-card,
+body.dark .numpad-card,
+body.dark .rule-card,
+body.dark .simulation-box,
+body.dark .stat-box,
+body.dark .challenge-card,
+body.dark .challenge-h,
+body.dark .keyboard-area,
+body.dark .num-btn,
+body.dark .score-display,
+body.dark .bento-card,
+body.dark .stat-card {
+  background: #1e1e1e !important;
+  border-color: #333 !important;
+  color: #e2e8f0 !important;
+}
+body.dark .desc,
+body.dark .m-head,
+body.dark .log-date,
+body.dark p,
+body.dark .subtitle,
+body.dark .d-desc,
+body.dark .chart-legend {
+  color: #94a3b8 !important;
+}
+body.dark .num-op1,
+body.dark .num-op2,
+body.dark .h-num1,
+body.dark .h-num2 {
+  color: #f8fafc !important;
+}
+body.dark .d-title,
+body.dark .value,
+body.dark .score-value {
+  color: #f8fafc !important;
+}
+body.dark .score-value.text-green { color: #10b981 !important; }
+body.dark .score-value.text-red { color: #ef4444 !important; }
+body.dark .value.text-green-light { color: #10b981 !important; }
+body.dark .value.text-red { color: #ef4444 !important; }
+body.dark .d-val {
+  color: #10b981 !important;
+  background: rgba(16,185,129,0.1) !important;
+}
+body.dark .log-icon-box { background: #333 !important; color: #fff !important; }
+body.dark .log-icon-box.add { background: #1e293b !important; color: #60a5fa !important; }
+body.dark .log-icon-box.subtract { background: #451a03 !important; color: #fb923c !important; }
+body.dark .log-icon-box.multiply { background: #4c0519 !important; color: #f43f5e !important; }
+body.dark .log-icon-box.divide { background: #064e3b !important; color: #34d399 !important; }
+
+body.dark .ls-box { background: #262626 !important; }
+body.dark .ls-box strong { color: #f8fafc !important; }
+body.dark .ls-box.red strong { color: #f87171 !important; }
+body.dark .ls-box.blue strong { color: #60a5fa !important; }
+
+body.dark .chart-insight-box { background: #262626 !important; }
+body.dark .next-box { background: #1e293b !important; border-color: #334155 !important; }
+body.dark .next-val { color: #f8fafc !important; }
+body.dark .num-btn { background: #262626 !important; color: #f8fafc !important; border-color: #404040 !important; }
+body.dark .num-btn:active { background: #404040 !important; }
+
+body.dark .chip { background: #262626 !important; border-color: #404040 !important; color: #cbd5e1 !important; }
+body.dark .chip.active { background: #10b981 !important; color: #111 !important; border-color: #10b981 !important; }
+body.dark .filter-row-inline .chip { background: #262626 !important; border-color: transparent !important; }
+body.dark .filter-row-inline .chip.active { background: #064e3b !important; color: #34d399 !important; }
+body.dark .n-grid { background: #121212 !important; border-color: #333 !important; }
+body.dark .n-grid span { background: #262626 !important; color: #cbd5e1 !important; border-color: #404040 !important; }
+body.dark .layout-preview { background: #121212 !important; border-color: #333 !important; }
+body.dark .layout-preview .num { background: #262626 !important; color: #cbd5e1 !important; border-color: #404040 !important; }

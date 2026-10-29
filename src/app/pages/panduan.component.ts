@@ -1,191 +1,145 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { menuOutline, createOutline, bulbOutline, arrowUpOutline } from 'ionicons/icons';
+import {
+  flask, bookOutline, alertCircleOutline, checkmarkCircle, checkmarkCircleOutline, arrowDownOutline, informationCircleOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-panduan',
   standalone: true,
   imports: [IonicModule, CommonModule],
   template: `
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title class="ion-text-center header-title">Panduan Tes</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content>
-      <div class="content-wrapper">
-        <div class="header-section">
-          <div class="title-container">
-            <h1>Instruksi Kerja<br><span class="highlight">Tes Kraepelin</span></h1>
-          </div>
-          <p class="description">
-            Tes Kraepelin, atau sering dikenal sebagai "tes koran", adalah alat ukur psikologis yang menilai kecepatan, ketelitian, konsistensi, dan ketahanan kerja seseorang melalui penjumlahan angka yang sistematis.
-          </p>
-        </div>
+      <div class="page-background">
 
-        <div class="card p-4 mt-20">
-          <div class="card-header">
-            <div class="icon-box">
-              <ion-icon name="create-outline"></ion-icon>
-            </div>
-            <div>
-              <h2>Langkah Pengerjaan</h2>
-              <span class="badge">SCIENTIFIC PROTOCOL</span>
-            </div>
-          </div>
-
-          <div class="steps-list">
-            <div class="step-item">
-              <div class="step-number">1</div>
-              <p>Jumlahkan dua angka yang berdekatan dari <strong>bawah ke atas</strong> di setiap kolom.</p>
-            </div>
-            <div class="step-item">
-              <div class="step-number">2</div>
-              <p>Tuliskan <strong>angka terakhir</strong> saja dari hasil penjumlahan tersebut di sebelah kanan ruang antara kedua angka.</p>
-            </div>
-            <div class="step-item">
-              <div class="step-number">3</div>
-              <p>Bila terdengar aba-aba <strong>"Pindah"</strong>, segera hentikan pekerjaan di kolom tersebut dan pindah ke bagian bawah kolom berikutnya.</p>
+        <div class="top-header">
+          <div class="header-left">
+            <div class="logo-box"><ion-icon name="flask"></ion-icon></div>
+            <div class="header-titles">
+              <span class="lab-title">KRAEPELIN LAB</span>
+              <h1 class="page-title">Metode</h1>
             </div>
           </div>
         </div>
 
-        <div class="card p-4 mt-16 text-center viz-card">
-          <h3 class="viz-title">VISUALISASI CONTOH</h3>
+        <div class="method-banner">
+          <div class="banner-badge"><ion-icon name="book-outline"></ion-icon> PANDUAN TES</div>
+          <h2>Aturan Pengerjaan</h2>
+          <p>Pahami cara pengerjaan tes Kraepelin agar hasil latihan Anda lebih maksimal.</p>
+        </div>
 
-          <div class="example-column">
-            <div class="number-box">4</div>
-            <div class="arrow-row">
-              <ion-icon name="arrow-up-outline" class="text-blue"></ion-icon>
-              <div class="answer-box">3</div>
+        <div class="section-container">
+          <div class="section-title-row">
+            <h3>3 Aturan Dasar</h3>
+          </div>
+          
+          <div class="rule-card">
+            <div class="rule-number">1</div>
+            <div class="rule-content">
+              <h4>Hitung Secara Vertikal</h4>
+              <p>Tambahkan dua angka yang berdekatan. Arah pengerjaan di aplikasi ini adalah <strong>Bawah ke Atas</strong> (Kraepelin).</p>
             </div>
-            <div class="number-box">9</div>
           </div>
-
-          <div class="formula-badge">
-            9 + 4 = <strong>13</strong> &rarr; Tulis <strong>3</strong>
+          
+          <div class="rule-card">
+            <div class="rule-number">2</div>
+            <div class="rule-content">
+              <h4>Hanya Tulis Angka Terakhir</h4>
+              <p>Jika hasil hitungan lebih dari 9, tuliskan hanya angka terakhirnya saja. <em>Contoh: 8 + 7 = 15, cukup ketik angka 5.</em></p>
+            </div>
           </div>
-        </div>
-
-        <div class="card p-4 mt-16">
-          <div class="tips-header">
-            <ion-icon name="bulb-outline" color="danger"></ion-icon>
-            <h2>Tips Pengerjaan</h2>
-          </div>
-
-          <div class="tip-item">
-            <h4>Jaga Ritme</h4>
-            <p>Konsisten lebih penting daripada terburu-buru. Usahakan kecepatan tetap stabil dari awal sampai akhir.</p>
-          </div>
-
-          <hr class="divider">
-
-          <div class="tip-item">
-            <h4>Tetap Teliti</h4>
-            <p>Kelelahan wajar terjadi seiring waktu. Tetap waspada terutama saat menghitung angka yang lebih besar.</p>
-          </div>
-
-          <hr class="divider">
-
-          <div class="tip-item">
-            <h4>Jangan Hapus</h4>
-            <p>Kalau salah, langsung timpa saja dengan jawaban yang benar. Jangan buang waktu untuk menghapus.</p>
+          
+          <div class="rule-card">
+            <div class="rule-number">3</div>
+            <div class="rule-content">
+              <h4>Perhatikan Waktu</h4>
+              <p>Teruslah berhitung secepat mungkin sampai waktu habis. Tidak usah ragu, kecepatan adalah kunci!</p>
+            </div>
           </div>
         </div>
 
+        <div class="section-container">
+          <div class="section-title-row">
+            <h3>Ilustrasi Pengerjaan</h3>
+            <span class="s-link text-green"><ion-icon name="checkmark-circle"></ion-icon> Contoh Valid</span>
+          </div>
+
+          <div class="simulation-box">
+             <div class="sim-body">
+                <div class="sim-col">
+                   <div class="num-box empty"></div>
+                   <div class="num-box">4</div>
+                   <div class="input-box valid">7</div>
+                   <div class="num-box">3</div>
+                   <div class="input-box valid">1</div>
+                   <div class="num-box">8</div>
+                </div>
+                <div class="sim-explanation">
+                  <div class="exp-item">
+                    <ion-icon name="arrow-down-outline" class="rotate-180"></ion-icon>
+                    <span><strong>4 + 3 = 7</strong> (Ketik 7)</span>
+                  </div>
+                  <div class="exp-item">
+                    <ion-icon name="arrow-down-outline" class="rotate-180"></ion-icon>
+                    <span><strong>3 + 8 = 11</strong> (Ketik 1)</span>
+                  </div>
+                </div>
+             </div>
+          </div>
+        </div>
 
       </div>
     </ion-content>
   `,
   styles: [`
-    ion-content { --background: #f7f9fa; }
-    ion-toolbar { --background: #f7f9fa; }
-    .header-title { font-size: 16px; font-weight: 700; color: #0d5dd7; }
+    :host { display: block; height: 100%; position: relative; }
+    ion-content { --background: #fafbfc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .page-background { padding: 20px; padding-bottom: 20px; padding-top: max(40px, env(safe-area-inset-top)); }
 
-    .content-wrapper { padding: 16px 20px 40px; }
-    .header-section {
-      padding-left: 16px; border-left: 4px solid #0d5dd7; margin-bottom: 24px;
-    }
-    h1 { font-size: 26px; font-weight: 800; color: #111; line-height: 1.2; margin: 0; }
-    .highlight { color: #0d5dd7; }
-    .description { font-size: 13px; color: #555; line-height: 1.6; margin-top: 12px; margin-bottom: 0; }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo-box { width: 40px; height: 40px; background: #005c4b; border-radius: 12px; display: flex; justify-content: center; align-items: center; color: white; font-size: 20px; }
+    .header-titles { display: flex; flex-direction: column; }
+    .lab-title { font-size: 10px; font-weight: 700; color: #6b7280; letter-spacing: 1px; }
+    .page-title { font-size: 20px; font-weight: 800; color: #111; margin: 0; line-height: 1.2; }
 
-    .card { background: white; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); }
-    .p-4 { padding: 20px; }
-    .mt-20 { margin-top: 20px; }
-    .mt-16 { margin-top: 16px; }
-    .mt-24 { margin-top: 24px; }
-    .text-center { text-align: center; }
+    .section-container { margin-bottom: 24px; }
+    .section-title-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+    .section-title-row h3 { font-size: 15px; font-weight: 800; color: #005c4b; margin: 0; display: flex; align-items: center; gap: 6px; }
+    .s-link { font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+    .text-green { color: #10b981; }
 
-    .card-header {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
-      .icon-box {
-        width: 36px; height: 36px; background: #eaf2ff; border-radius: 8px;
-        display: flex; align-items: center; justify-content: center; color: #0d5dd7; font-size: 18px;
-      }
-      h2 { font-size: 15px; font-weight: 700; margin: 0 0 4px 0; color: #111; }
-      .badge { font-size: 9px; font-weight: 700; color: #555; letter-spacing: 0.5px; }
-    }
+    .method-banner { background: #1e293b; border-radius: 16px; padding: 20px; margin-bottom: 24px; color: white; }
+    .banner-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); color: #94a3b8; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .method-banner h2 { font-size: 20px; font-weight: 800; margin: 0 0 8px 0; color: white; }
+    .method-banner p { margin: 0; font-size: 12px; color: #94a3b8; line-height: 1.5; }
 
-    .steps-list { display: flex; flex-direction: column; gap: 16px; }
-    .step-item {
-      display: flex; gap: 16px; align-items: flex-start;
-      .step-number {
-        width: 24px; height: 24px; background: #e8ebee; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 11px; font-weight: 700; color: #0d5dd7; flex-shrink: 0;
-      }
-      p { margin: 0; font-size: 13px; color: #444; line-height: 1.5; strong { color: #111; } }
-    }
+    .rule-card { display: flex; gap: 16px; background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid #f3f4f6; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .rule-number { width: 32px; height: 32px; border-radius: 50%; background: #005c4b; color: white; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: 800; flex-shrink: 0; }
+    .rule-content h4 { font-size: 14px; font-weight: 800; color: #111; margin: 0 0 6px 0; }
+    .rule-content p { font-size: 12px; color: #4b5563; margin: 0; line-height: 1.5; }
 
-    .viz-card { background: #f8f9fa; }
-    .viz-title { font-size: 11px; font-weight: 700; color: #666; letter-spacing: 1px; margin: 0 0 20px 0; }
-    .example-column { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 20px; }
-    .number-box {
-      background: white; padding: 8px 16px; font-size: 20px; font-weight: 700;
-      border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .arrow-row { display: flex; align-items: center; gap: 12px; margin-left: 36px; }
-    .text-blue { color: #0d5dd7; font-size: 20px; }
-    .answer-box {
-      background: white; border: 2px solid #0d5dd7; color: #0d5dd7;
-      font-size: 16px; font-weight: 700; padding: 4px 12px; border-radius: 6px;
-    }
-    .formula-badge {
-      display: inline-block; background: #e8ebee; padding: 8px 16px;
-      border-radius: 20px; font-size: 11px; color: #555;
-    }
-
-    .tips-header {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
-      ion-icon { font-size: 20px; }
-      h2 { font-size: 16px; font-weight: 700; margin: 0; color: #111; }
-    }
-    .tip-item {
-      h4 { font-size: 13px; font-weight: 700; color: #111; margin: 0 0 8px 0; }
-      p { font-size: 12px; color: #555; line-height: 1.5; margin: 0; }
-    }
-    .divider {
-      border: none; border-top: 1px solid #f0f0f0; margin: 16px 0;
-    }
-
-    .actions { display: flex; flex-direction: column; gap: 12px; }
-    .primary-btn {
-      width: 100%; background: #0d5dd7; color: white; border: none;
-      padding: 16px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;
-    }
-    .text-btn {
-      width: 100%; background: transparent; color: #0d5dd7; border: none;
-      padding: 16px; font-size: 13px; font-weight: 700; cursor: pointer;
-    }
+    .simulation-box { background: #f8fafc; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .sim-body { padding: 20px; display: flex; gap: 32px; align-items: center; justify-content: center; }
+    .sim-col { display: flex; flex-direction: column; gap: 8px; width: 40px; }
+    .num-box, .input-box { width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 18px; font-weight: 700; }
+    .num-box { background: white; border: 1px solid #cbd5e1; color: #334155; }
+    .num-box.empty { background: transparent; border: 1px dashed #cbd5e1; }
+    .input-box { background: #eef2fa; border: 2px solid #3b82f6; color: #1d4ed8; font-weight: 800; transform: translateX(12px); width: 36px; height: 36px; font-size: 16px; margin: -10px 0; z-index: 2; position: relative; }
+    .input-box.valid { background: #ecfdf5; border-color: #10b981; color: #047857; }
+    
+    .sim-explanation { display: flex; flex-direction: column; gap: 36px; margin-top: 10px; }
+    .exp-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #475569; }
+    .rotate-180 { transform: rotate(180deg); color: #005c4b; font-size: 14px; font-weight: 800; }
+    .exp-item strong { color: #005c4b; }
   `]
 })
 export class PanduanComponent {
-  constructor(private router: Router) {
-    addIcons({ menuOutline, createOutline, bulbOutline, arrowUpOutline });
+  constructor() {
+    addIcons({
+      flask, bookOutline, alertCircleOutline, checkmarkCircle, checkmarkCircleOutline, arrowDownOutline, informationCircleOutline
+    });
   }
 }
